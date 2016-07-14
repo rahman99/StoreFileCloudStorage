@@ -1,4 +1,4 @@
-package com.msk.storedata;
+package com.sample.storedata;
 
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader.FileLoadException;

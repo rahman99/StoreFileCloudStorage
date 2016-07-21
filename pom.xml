@@ -38,6 +38,11 @@
 	    <version>1.5.3</version>
 	</dependency>
 	<dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-drive</artifactId>
+      <version>v2-rev228-1.22.0</version>
+    </dependency>
+	<dependency>
 		<groupId>javax.servlet</groupId>
 		<artifactId>servlet-api</artifactId>
 		<version>2.5</version>

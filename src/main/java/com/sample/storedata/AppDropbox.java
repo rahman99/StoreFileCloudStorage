@@ -16,10 +16,11 @@ public class AppDropbox
 {
     public static void main( String[] args ) throws IOException, DbxException, FileLoadException
     {
-    	final String APP_KEY = "xxxxxxx";
-        final String APP_SECRET = "yyyyy";
-        String fileDropBoxLocation = "/watest.txt";
-        String fileTargetLocation = "/media/rahman/DATA/watest.txt";
+    	final String APP_KEY = "4plxnju6x2aafmk";//"xxxxxxx";
+        final String APP_SECRET = "qniph1nndry39um";//"yyyyy";
+        String accessToken = "bvt9J-_iprsAAAAAAAAAQt4teZl15ik2Z6KwU_ZvF7J6OuzQThtSHZd8HcPCi9mD";//"zzzzzzzzzzzzzz";
+        String fileDropBoxLocation = "/mantest/watest.txt";
+        String fileTargetLocation = "/media/rahman/DATA/zDropMan";
 
         DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
 
@@ -38,13 +39,12 @@ public class AppDropbox
         // This will fail if the user enters an invalid authorization code.
 //        DbxAuthFinish authFinish = webAuth.finish(code);
 //        String accessToken = authFinish.accessToken;
-        String accessToken = "zzzzzzzzzzzzzz";
 
         DbxClient client = new DbxClient(config, accessToken);
 
         System.out.println("Linked account: " + client.getAccountInfo().displayName);
 
-        File inputFile = new File(fileTargetLocation); //file location in local.
+        /*File inputFile = new File(fileTargetLocation); //file location in local.
         FileInputStream inputStream = new FileInputStream(inputFile);
         try {
             DbxEntry.File uploadedFile = client.uploadFile(fileDropBoxLocation,//file location in dropbox
@@ -52,22 +52,48 @@ public class AppDropbox
             System.out.println("Uploaded: " + uploadedFile.toString());
         } finally {
             inputStream.close();
-        }
+        }*/
         
-        
-//        DbxEntry.WithChildren listing = client.getMetadataWithChildren("/");
-//        System.out.println("Files in the root path:");
-//        for (DbxEntry child : listing.children) {
-//            System.out.println("	" + child.name + ": " + child.toString());
-//        }
-//
-//        FileOutputStream outputStream = new FileOutputStream("test.txt");
+        //////////////////////////listing/////////////////////////
+        /*DbxEntry.WithChildren listing = client.getMetadataWithChildren("/Document");
+        System.out.println("Files in the root path:");
+        for (DbxEntry child : listing.children) {
+            System.out.println("	" + child.name + ": " + child.toString());
+        }*/
+        DbxEntry.WithChildren listing = null;
+        String pathMetaData = "/Document";
 //        try {
-//            DbxEntry.File downloadedFile = client.getFile("/media/rahman/DATA/test.txt", null,
+        	listing = client.getMetadataWithChildren(pathMetaData);
+//            System.out.println("Files in the root path:");
+//            for (DbxEntry child : listing.children) {
+//            	
+////                System.out.println("	" + child.name + ": " + child.toString());
+////                if(child.isFolder()==true){
+////                	pathMetaData = pathMetaData+"/"+child.name;
+////                }
+//            }
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+        ////////////////download//////////////////////////////
+//        FileOutputStream outputStream = new FileOutputStream(fileTargetLocation);
+        try {
+//            DbxEntry.File downloadedFile = client.getFile(fileDropBoxLocation, null,
 //                outputStream);
 //            System.out.println("Metadata: " + downloadedFile.toString());
-//        } finally {
-//            outputStream.close();
-//        }
+        	for (DbxEntry child : listing.children){
+        	      if(child.isFile()==true) {
+        	    	  client.getFile(pathMetaData +"/"+ child.name, null, new FileOutputStream(fileTargetLocation+"/"+child.name));
+        	    	  System.out.println(child.name);
+        	      }
+        	      else if(child.isFolder()==true){
+        	    	  new File(fileTargetLocation+"/"+child.name).mkdir();
+        	    	  fileTargetLocation = fileTargetLocation+"/"+child.name;
+        	      }
+        	}
+        } catch (Exception e) {
+			System.err.println("catch execute");
+		}
     }
 }

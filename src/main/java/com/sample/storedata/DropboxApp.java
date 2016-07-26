@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.dropbox.core.DbxAppInfo;
@@ -21,14 +22,15 @@ import com.dropbox.core.DbxWriteMode;
 public class DropboxApp {
 	
 	private static String fileDropBoxLocation = "/mantest2";
-    private static String fileTargetLocation = "/media/rahman/DATA/zDropMan";
+    private static final String fileTargetLocation = "/media/rahman/DATA/zDropMan";
+    
+    private static final String accessToken = "bvt9J-_iprsAAAAAAAAAQt4teZl15ik2Z6KwU_ZvF7J6OuzQThtSHZd8HcPCi9mD";//"zzzzzzzzzzzzzz";
+    
 
 	public static void main(String[] args) throws DbxException {
-		
 		final String APP_KEY = "4plxnju6x2aafmk";//"xxxxxxx";
-        final String APP_SECRET = "qniph1nndry39um";//"yyyyy";
-        String accessToken = "bvt9J-_iprsAAAAAAAAAQt4teZl15ik2Z6KwU_ZvF7J6OuzQThtSHZd8HcPCi9mD";//"zzzzzzzzzzzzzz";
-        
+	    final String APP_SECRET = "qniph1nndry39um";//"yyyyy";
+		
 
         DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
 
@@ -53,10 +55,10 @@ public class DropboxApp {
         System.out.println("Linked account: " + client.getAccountInfo().displayName);
 
         ///////upload folder/////////
-        uploadFolder(client);
+//        uploadFolder(client);
         //////////////////////////listing/////////////////////////
-//        System.out.println("Files in the root path:");
-//        listFile(fileDropBoxLocation, client);
+        System.out.println("Files in the root path:");
+        listFile(client);
         
 
         ////////////////download//////////////////////////////
@@ -86,7 +88,6 @@ public class DropboxApp {
         }
 	}
 	private static void uploadFile(DbxClient client, File inputFile, String fileDropBoxLocation){
-//		File inputFile = new File(fileTargetLocation); //file location in local.
         FileInputStream inputStream = null;
         try {
         	inputStream = new FileInputStream(inputFile);
@@ -104,16 +105,16 @@ public class DropboxApp {
         }
 	}
 	
-	private static void listFile(String pathMetaData, DbxClient client){
+	private static void listFile(DbxClient client){
 		try {
-			DbxEntry.WithChildren listing = client.getMetadataWithChildren(pathMetaData);
+			DbxEntry.WithChildren listing = client.getMetadataWithChildren(fileDropBoxLocation);
             for (DbxEntry child : listing.children) {
             	if(child.isFile()==true)
             		System.out.println("	" + child.name + ": " +child.path+" ; "+ child.toString());
             	else if (child.isFolder()==true){
-                	pathMetaData = child.path;
+            		fileDropBoxLocation = child.path;
 //                	System.out.println("	" + child.name + ": " +child.path);
-                	listFile(pathMetaData, client);
+                	listFile(client);
                 }
             }
 		} catch (Exception e) {
@@ -121,9 +122,9 @@ public class DropboxApp {
 		}
 	}
 	
-	private static void downloadFile(DbxClient client, String pathMetaData, String fileTargetLocation){
+	private static void downloadFile(DbxClient client, String fileDropBoxLocation, String fileTargetLocation){
 		try {
-			DbxEntry.WithChildren listing = client.getMetadataWithChildren(pathMetaData);
+			DbxEntry.WithChildren listing = client.getMetadataWithChildren(fileDropBoxLocation);
 			for(DbxEntry child : listing.children){
         		String fileTargetName = fileTargetLocation+"/"+child.name;
         	      if(child.isFile()==true) {

@@ -3,6 +3,10 @@ package com.sample.storedata;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.http.HttpResponse;
@@ -21,11 +25,15 @@ public class AppGoogleDrive {
 //		Drive.Files.Insert request = drive.files().insert(fileMetadata, mediaContent);
 //		request.getMediaHttpUploader().setProgressListener(new CustomProgressListener());
 //		request.execute();
+		try {
+			URL website = new URL("https://en.wikipedia.org/wiki/Non-blocking_I/O_(Java)");
+			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+			FileOutputStream fos = new FileOutputStream("/media/rahman/DATA/zDropMan/wiki.html");
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		int cut = new String("/media/rahman/DATA/zDropMan/").length();
-		String test = "/media/rahman/DATA/zDropMan/folder2/demows.zip";
-		String cutting = test.substring(cut);
-		System.out.println(cutting);
 	}
 
 }
